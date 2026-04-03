@@ -108,10 +108,10 @@ def main():
         all_completed[name] = completed
         comparison_results[name] = averages
 
-    create_gantt_figure(all_schedules)
-    create_comparison_figure(comparison_results)
-    create_results_table_figure(all_completed)
     create_dashboard_figure(comparison_results)
+    create_results_table_figure(all_completed)
+    create_comparison_figure(comparison_results)
+    create_gantt_figure(all_schedules)
 
 
     plt.show()
