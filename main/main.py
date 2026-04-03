@@ -1,7 +1,14 @@
+import matplotlib.pyplot as plt
+
 from sample_data import get_sample_processes
 from schedulers import fcfs, sjf, round_robin, priority_scheduling, srtf
 from metrics import calculate_averages
-from visualization import plot_gantt_chart, plot_comparison_chart
+from visualization import (
+    create_gantt_figure,
+    create_comparison_figure,
+    create_results_table_figure,
+    create_dashboard_figure
+)
 
 
 def print_results(completed, averages):
@@ -35,29 +42,38 @@ def run_algorithm(name, algorithm, processes):
     for item in schedule:
         print(item)
 
-    plot_gantt_chart(schedule, title=f"{name} Gantt Chart")
-
-    return averages
+    return schedule, completed, averages
 
 
 def main():
     processes = get_sample_processes()
 
+    algorithms = {
+        "FCFS": fcfs,
+        "SJF": sjf,
+        "RR (q=2)": lambda p: round_robin(p, quantum=2),
+        "Priority": priority_scheduling,
+        "SRTF": srtf,
+    }
+
+    all_schedules = {}
+    all_completed = {}
     comparison_results = {}
 
-    comparison_results["FCFS"] = run_algorithm("FCFS", fcfs, processes)
-    comparison_results["SJF"] = run_algorithm("SJF", sjf, processes)
-    comparison_results["RR (q=2)"] = run_algorithm(
-        "Round Robin (q=2)",
-        lambda p: round_robin(p, quantum=2),
-        processes
-    )
-    comparison_results["Priority"] = run_algorithm("Priority", priority_scheduling, processes)
-    comparison_results["SRTF"] = run_algorithm("SRTF", srtf, processes)
+    for name, algorithm in algorithms.items():
+        schedule, completed, averages = run_algorithm(name, algorithm, processes)
+        all_schedules[name] = schedule
+        all_completed[name] = completed
+        comparison_results[name] = averages
 
-    plot_comparison_chart(comparison_results)
+    create_gantt_figure(all_schedules)
+    create_comparison_figure(comparison_results)
+    create_results_table_figure(all_completed)
+    create_dashboard_figure(comparison_results)
+
+
+    plt.show()
 
 
 if __name__ == "__main__":
-    main()
-
+    main()  
