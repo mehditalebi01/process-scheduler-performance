@@ -1,3 +1,13 @@
+import matplotlib.pyplot as plt
+from schedulers import fcfs, sjf, round_robin, priority_scheduling, srtf
+from metrics import calculate_averages
+from visualization import (
+    create_gantt_figure,
+    create_comparison_figure,
+    create_results_table_figure,
+    create_dashboard_figure,
+)
+
 print("******** welcome to process scheduler performance simulation ********")
 
 sampledata = input(
@@ -11,64 +21,60 @@ sampledata = input(
     ">>>"
 )
 
+
 if sampledata == "1":
     from sample_data import scenario_basic
+
     processes = scenario_basic()
     scenario_name = "Basic"
 elif sampledata == "2":
     from sample_data import scenario_convoy_effect
+
     processes = scenario_convoy_effect()
     scenario_name = "Convoy Effect"
 elif sampledata == "3":
     from sample_data import scenario_rr_friendly
+
     processes = scenario_rr_friendly()
     scenario_name = "RR Friendly"
 elif sampledata == "4":
     from sample_data import scenario_priority_case
+
     processes = scenario_priority_case()
     scenario_name = "Priority Case"
 elif sampledata == "5":
     from sample_data import scenario_srtf_case
+
     processes = scenario_srtf_case()
     scenario_name = "SRTF Case"
 elif sampledata == "6":
     from sample_data import scenario_presentation
+
     processes = scenario_presentation()
     scenario_name = "Presentation"
 else:
     from sample_data import scenario_basic
+
     print("invalid choice, basic scenario selected.")
     processes = scenario_basic()
     scenario_name = "Basic"
-
-
-
-import matplotlib.pyplot as plt
-from schedulers import fcfs, sjf, round_robin, priority_scheduling, srtf
-from metrics import calculate_averages
-from visualization import (
-    create_gantt_figure,
-    create_comparison_figure,
-    create_results_table_figure,
-    create_dashboard_figure
-)
 
 
 def print_results(completed, averages):
     print("\nProcess Results:")
     for p in completed:
         print(
-            f'{p["pid"]}: '
-            f'Waiting={p["waiting_time"]}, '
-            f'Turnaround={p["turnaround_time"]}, '
-            f'Response={p["response_time"]}'
+            f"{p['pid']}: "
+            f"Waiting={p['waiting_time']}, "
+            f"Turnaround={p['turnaround_time']}, "
+            f"Response={p['response_time']}"
         )
 
     print("\nAverages:")
-    print(f'Average Waiting Time: {averages["avg_waiting_time"]:.2f}')
-    print(f'Average Turnaround Time: {averages["avg_turnaround_time"]:.2f}')
-    print(f'Average Response Time: {averages["avg_response_time"]:.2f}')
-    print(f'Throughput: {averages["throughput"]:.2f}')
+    print(f"Average Waiting Time: {averages['avg_waiting_time']:.2f}")
+    print(f"Average Turnaround Time: {averages['avg_turnaround_time']:.2f}")
+    print(f"Average Response Time: {averages['avg_response_time']:.2f}")
+    print(f"Throughput: {averages['throughput']:.2f}")
 
 
 def run_algorithm(name, algorithm, processes):
@@ -113,9 +119,8 @@ def main():
     create_comparison_figure(comparison_results)
     create_gantt_figure(all_schedules)
 
-
     plt.show()
 
 
 if __name__ == "__main__":
-    main()  
+    main()

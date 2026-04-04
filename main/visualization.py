@@ -13,7 +13,7 @@ PROCESS_COLORS = {
     "P8": "#ff9da7",
     "P9": "#9c755f",
     "P10": "#bab0ab",
-    "IDLE": "#d3d3d3"
+    "IDLE": "#d3d3d3",
 }
 
 
@@ -24,9 +24,7 @@ def get_process_color(pid):
 def create_gantt_figure(all_schedules, scenario_name="Selected Scenario"):
     num_algorithms = len(all_schedules)
     fig, axes = plt.subplots(
-        num_algorithms, 1,
-        figsize=(15, 3 * num_algorithms),
-        sharex=True
+        num_algorithms, 1, figsize=(15, 3 * num_algorithms), sharex=True
     )
 
     if num_algorithms == 1:
@@ -44,7 +42,7 @@ def create_gantt_figure(all_schedules, scenario_name="Selected Scenario"):
                 (y, height),
                 facecolors=get_process_color(pid),
                 edgecolors="black",
-                linewidth=1.2
+                linewidth=1.2,
             )
 
             ax.text(
@@ -55,7 +53,7 @@ def create_gantt_figure(all_schedules, scenario_name="Selected Scenario"):
                 va="center",
                 fontsize=9,
                 fontweight="bold",
-                color="black"
+                color="black",
             )
 
             ax.text(start, y - 1.2, str(start), fontsize=8, ha="center")
@@ -69,12 +67,12 @@ def create_gantt_figure(all_schedules, scenario_name="Selected Scenario"):
         total_end = max(end for _, _, end in schedule)
         ax.set_xlim(0, total_end + 1)
 
-    axes[-1].set_xlabel("Time", fontsize=11, fontweight="bold")
+    axes[-1].set_xlabel("Time (ns)", fontsize=11, fontweight="bold")
 
     fig.suptitle(
         f"CPU Scheduling - Gantt Charts\nScenario: {scenario_name}",
         fontsize=16,
-        fontweight="bold"
+        fontweight="bold",
     )
     plt.tight_layout(rect=[0, 0, 1, 0.95])
 
@@ -124,13 +122,13 @@ def create_comparison_figure(results, scenario_name="Selected Scenario"):
                 ha="center",
                 va="bottom",
                 fontsize=9,
-                fontweight="bold"
+                fontweight="bold",
             )
 
     fig.suptitle(
         f"Scheduling Metrics Comparison\nScenario: {scenario_name}",
         fontsize=16,
-        fontweight="bold"
+        fontweight="bold",
     )
     plt.tight_layout(rect=[0, 0, 1, 0.95])
 
@@ -148,30 +146,35 @@ def create_results_table_figure(all_completed, scenario_name="Selected Scenario"
         ax.axis("off")
 
         columns = [
-            "PID", "Arrival", "Burst", "Start",
-            "Completion", "Waiting", "Turnaround", "Response"
+            "PID",
+            "Arrival",
+            "Burst",
+            "Start",
+            "Completion",
+            "Waiting",
+            "Turnaround",
+            "Response",
         ]
 
         table_data = []
         completed_sorted = sorted(completed, key=lambda x: x["pid"])
 
         for p in completed_sorted:
-            table_data.append([
-                p["pid"],
-                p["arrival_time"],
-                p["burst_time"],
-                p["start_time"],
-                p["completion_time"],
-                p["waiting_time"],
-                p["turnaround_time"],
-                p["response_time"],
-            ])
+            table_data.append(
+                [
+                    p["pid"],
+                    p["arrival_time"],
+                    p["burst_time"],
+                    p["start_time"],
+                    p["completion_time"],
+                    p["waiting_time"],
+                    p["turnaround_time"],
+                    p["response_time"],
+                ]
+            )
 
         table = ax.table(
-            cellText=table_data,
-            colLabels=columns,
-            cellLoc="center",
-            loc="center"
+            cellText=table_data, colLabels=columns, cellLoc="center", loc="center"
         )
 
         table.auto_set_font_size(False)
@@ -187,12 +190,14 @@ def create_results_table_figure(all_completed, scenario_name="Selected Scenario"
             else:
                 cell.set_facecolor("#f8f8f8")
 
-        ax.set_title(f"{name} - Process Results", fontsize=12, fontweight="bold", pad=10)
+        ax.set_title(
+            f"{name} - Process Results", fontsize=12, fontweight="bold", pad=10
+        )
 
     fig.suptitle(
         f"Per-Process Detailed Results\nScenario: {scenario_name}",
         fontsize=16,
-        fontweight="bold"
+        fontweight="bold",
     )
     plt.tight_layout(rect=[0, 0, 1, 0.95])
 
@@ -222,16 +227,14 @@ def create_dashboard_figure(results, scenario_name="Selected Scenario"):
     )
 
     axes[0].text(
-        0.02, 0.95, summary_text,
+        0.02,
+        0.95,
+        summary_text,
         transform=axes[0].transAxes,
         fontsize=13,
         va="top",
         family="monospace",
-        bbox=dict(
-            boxstyle="round,pad=0.8",
-            edgecolor="black",
-            facecolor="#f5f5f5"
-        )
+        bbox=dict(boxstyle="round,pad=0.8", edgecolor="black", facecolor="#f5f5f5"),
     )
 
     bars = axes[1].bar(x, throughput_values, color="#9c755f", edgecolor="black")
@@ -249,12 +252,10 @@ def create_dashboard_figure(results, scenario_name="Selected Scenario"):
             f"{h:.2f}",
             ha="center",
             fontsize=9,
-            fontweight="bold"
+            fontweight="bold",
         )
 
     fig.suptitle("Scheduling Dashboard", fontsize=16, fontweight="bold")
     plt.tight_layout(rect=[0, 0, 1, 0.95])
 
     return fig
-
-    
