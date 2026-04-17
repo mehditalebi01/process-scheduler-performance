@@ -205,19 +205,14 @@ def create_results_table_figure(all_completed, scenario_name="Selected Scenario"
 
 
 def create_dashboard_figure(results, scenario_name="Selected Scenario"):
-    algorithm_names = list(results.keys())
-
     best_waiting = min(results.items(), key=lambda x: x[1]["avg_waiting_time"])
     best_turnaround = min(results.items(), key=lambda x: x[1]["avg_turnaround_time"])
     best_response = min(results.items(), key=lambda x: x[1]["avg_response_time"])
     best_throughput = max(results.items(), key=lambda x: x[1]["throughput"])
 
-    throughput_values = [results[name]["throughput"] for name in algorithm_names]
-    x = np.arange(len(algorithm_names))
+    fig, ax = plt.subplots(figsize=(13, 5))
 
-    fig, axes = plt.subplots(2, 1, figsize=(13, 9))
-
-    axes[0].axis("off")
+    ax.axis("off")
     summary_text = (
         f"Scenario: {scenario_name}\n\n"
         f"Best Average Waiting Time    : {best_waiting[0]} ({best_waiting[1]['avg_waiting_time']:.2f})\n"
@@ -226,34 +221,16 @@ def create_dashboard_figure(results, scenario_name="Selected Scenario"):
         f"Best Throughput             : {best_throughput[0]} ({best_throughput[1]['throughput']:.2f})\n"
     )
 
-    axes[0].text(
+    ax.text(
         0.02,
         0.95,
         summary_text,
-        transform=axes[0].transAxes,
+        transform=ax.transAxes,
         fontsize=13,
         va="top",
         family="monospace",
         bbox=dict(boxstyle="round,pad=0.8", edgecolor="black", facecolor="#f5f5f5"),
     )
-
-    bars = axes[1].bar(x, throughput_values, color="#9c755f", edgecolor="black")
-    axes[1].set_title("Throughput Comparison", fontsize=12, fontweight="bold")
-    axes[1].set_ylabel("Throughput")
-    axes[1].set_xticks(x)
-    axes[1].set_xticklabels(algorithm_names)
-    axes[1].grid(True, axis="y", linestyle="--", alpha=0.4)
-
-    for bar in bars:
-        h = bar.get_height()
-        axes[1].text(
-            bar.get_x() + bar.get_width() / 2,
-            h + 0.002,
-            f"{h:.2f}",
-            ha="center",
-            fontsize=9,
-            fontweight="bold",
-        )
 
     fig.suptitle("Scheduling Dashboard", fontsize=16, fontweight="bold")
     plt.tight_layout(rect=[0, 0, 1, 0.95])
